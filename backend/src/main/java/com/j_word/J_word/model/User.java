@@ -1,5 +1,7 @@
 package com.j_word.J_word.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,5 +27,7 @@ public class User {
     @Email
     @Column(unique = true)
     private String email;
+
+    @JsonIgnore
     private String password;
 }

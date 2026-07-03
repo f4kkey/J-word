@@ -11,6 +11,7 @@ import com.j_word.J_word.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,14 +23,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AuthController {
     private final AuthService authService;
 
-    @GetMapping("/user")
-    public User getUser(String email) {
-        return authService.getUser(email);
-    }
-
     @PostMapping("/register")
     public AuthResponse register(@Valid @RequestBody AuthRequest authRequest) {
         return authService.register(authRequest);
+    }
+
+    @PostMapping("/login")
+    public AuthResponse login(@Valid @RequestBody AuthRequest authRequest) {
+        return authService.login(authRequest);
+    }
+
+    @GetMapping("/getme")
+    public String getCurrentUser(Authentication authentication) {
+        return authService.getCurrentUser(authentication);
     }
 
 }
