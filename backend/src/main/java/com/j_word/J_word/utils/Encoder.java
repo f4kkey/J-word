@@ -3,8 +3,6 @@ package com.j_word.J_word.utils;
 import java.security.MessageDigest;
 import java.util.Base64;
 
-import javax.management.RuntimeErrorException;
-
 import org.springframework.stereotype.Component;
 
 @Component

@@ -19,6 +19,18 @@ spring:
         properties:
             hibernate:
                 format_sql: true
+
+    mail:
+        address: ${MAIL_SENDER}
+        host: localhost
+        port: 1025
+        properties:
+            "mail.host": localhost
+            "mail.user": local
+            "mail.smtp.auth": false
+            "mail.smtp.starttls.enable": false
+            "mail.smtp.localhost": localhost
+
 jwt:
     secret: ${JWT_SECRET}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}

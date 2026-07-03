@@ -42,7 +42,7 @@ public class ExceptionController {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, String>> handleDataIntegrityViolationException(
             DataIntegrityViolationException e) {
-        if (e.getMessage().contains("Duplicate entry")) {
+        if (e.getMessage().contains("duplicate key value")) {
             return ResponseEntity.badRequest()
                     .body(Map.of("message", "Email already exists, please use another email or login."));
         }

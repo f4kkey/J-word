@@ -1,5 +1,7 @@
 package com.j_word.J_word.model;
 
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -28,6 +30,12 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    private boolean emailVerified = false;
+    private String emailVerificationToken = null;
+    private LocalDateTime emailVerificationTokenExpiryDate = null;
+
     @JsonIgnore
     private String password;
+    private String passwordResetToken = null;
+    private LocalDateTime passwordResetTokenExpiryDate = null;
 }
