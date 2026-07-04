@@ -3,46 +3,78 @@ import Input from '../../components/auth/Input'
 import Button from '../../components/auth/Button'
 import Seperator from '../../components/auth/Seperator'
 import { Link, useNavigate } from 'react-router-dom'
+import { axiosInstance } from '../../lib/axios'
 
 export default function VerifyEmail() {
 
     const [errorMessage, setErrorMessage] = useState("");
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
-    const [emailSent, setEmailSent] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const validateEmail = async (code: string) => {
+        setMessage("")
+        try {
+            const res = await axiosInstance.post(
+                "/auth/email/validate"
+            )
+            if (res.status === 200) {
+                setErrorMessage("")
+                navigate("/")
+            }
+            setErrorMessage(res.data)
+        } catch (error) {
+            console.log(error)
+            setErrorMessage("Something went wrong")
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    const sendEmailToken = async () => {
+        setErrorMessage("")
+        try {
+            const res = await axiosInstance.get(
+                "/auth/email/token"
+            )
+            if (res.status === 200) {
+                setErrorMessage("")
+                setMessage("Code sent successfully. Please check your email.")
+                return
+            }
+            setErrorMessage(res.data)
+        } catch (error) {
+            console.log(error)
+            setErrorMessage("Something went wrong")
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     return (
         <div>
             <h1>Verify your Email</h1>
-            {
-                !emailSent ?
-                    <form>
-                        <p>Only 1 step left to complete you registration. Verify your email address</p>
-                        <Input type='text' id='code' label='Verification code' />
-                        {message && <p className='mb-4 text-green-400'>{message}</p>}
-                        {errorMessage && <p className='mb-4 text-red-600'>{errorMessage}</p>}
+            <form onSubmit={async (e) => {
+                e.preventDefault();
+                setIsLoading(true)
+                const code = e.currentTarget.code.value;
+                await validateEmail(code);
+                setIsLoading(false);
+            }}>
+                <p>Only 1 step left to complete you registration. Verify your email address</p>
+                <Input type='text' id='code' label='Verification code' />
+                {message && <p className='mb-4 text-green-400'>{message}</p>}
+                {errorMessage && <p className='mb-4 text-red-600'>{errorMessage}</p>}
 
-                        <Button type='submit'> Validate email</Button>
-                        <Button type='button' outline>
-                            Send again
-                        </Button>
-                    </form> :
-                    <form>
-                        <p>Enter the verification code has just been sent to your email</p>
-                        <Input type='text' id='code' label='Verification code' />
-                        <Input type='password' id='password' label='New password' />
-                        { }
-                        {errorMessage && <p className='mb-4 text-red-600'>{errorMessage}</p>}
-
-                        <Button type='submit'> Reset password</Button>
-                        <Button type='button' outline
-                            onClick={() => {
-                                setEmailSent(false)
-                                navigate("/login")
-                            }}>
-                            Back
-                        </Button>
-                    </form>
-            }
+                <Button type='submit' disabled={isLoading}> Validate email</Button>
+                <Button type='button' outline disabled={isLoading}
+                    onClick={() => {
+                        sendEmailToken();
+                    }}
+                >
+                    Send again
+                </Button>
+            </form>
 
         </div >
     )
