@@ -13,16 +13,22 @@ export default function Login() {
             <h1>Sign in</h1>
             <p>Keep looking for a J**</p>
             <form>
-                <Input type='email' id='email' label='Email' />
-                <Input type='password' id='password' label='Password' />
+                <Input type='email' id='email' label='Email' onFocus={() => setErrorMessage("")} />
+                <Input
+                    type='password'
+                    id='password'
+                    label='Password'
+                    onFocus={() => setErrorMessage("")}
+                />
 
                 {errorMessage && <p className='mb-4 text-red-600'>{errorMessage}</p>}
 
                 <Button type='submit'> Sign in</Button>
+                <Link to="/password-reset">Forgot Password?</Link>
             </form>
             <Seperator>Or</Seperator>
             <div className='text-center'>You new here?{" "}
-                <Link to="/login" >
+                <Link to="/signup" >
                     Make an account
                 </Link>
             </div>

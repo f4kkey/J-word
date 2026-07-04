@@ -13,8 +13,8 @@ export default function Signup() {
             <h1>Sign up for a J** opportunity</h1>
             <p>Don't be scare</p>
             <form>
-                <Input type='email' id='email' label='Email' />
-                <Input type='password' id='password' label='Password' />
+                <Input type='email' id='email' label='Email' onFocus={() => setErrorMessage("")} />
+                <Input type='password' id='password' label='Password' onFocus={() => setErrorMessage("")} />
 
                 {errorMessage && <p className='mb-4 text-red-600'>{errorMessage}</p>}
 
