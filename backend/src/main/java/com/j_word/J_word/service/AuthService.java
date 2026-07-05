@@ -178,4 +178,9 @@ public class AuthService {
 
         return userRepository.save(user);
     }
+
+    public void deleteUser(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        userRepository.delete(user);
+    }
 }
