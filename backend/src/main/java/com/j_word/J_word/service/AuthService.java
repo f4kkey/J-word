@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import com.j_word.J_word.dto.AuthRequest;
 import com.j_word.J_word.dto.AuthResponse;
+import com.j_word.J_word.dto.UserRequest;
+import com.j_word.J_word.dto.UserResponse;
 import com.j_word.J_word.model.User;
 import com.j_word.J_word.repository.UserRepository;
 import com.j_word.J_word.security.JwtService;
@@ -65,6 +67,7 @@ public class AuthService {
     }
 
     public void validateEmailVerificationToken(String token, String email) {
+        logger.info(email + " " + token);
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent() && passwordEncoder.matches(token, user.get().getEmailVerificationToken())
                 && !user.get().getEmailVerificationTokenExpiryDate().isBefore(LocalDateTime.now())) {
@@ -153,8 +156,26 @@ public class AuthService {
         return new AuthResponse(token, "User login successfully");
     }
 
-    public String getCurrentUser(Authentication authentication) {
+    public UserResponse getCurrentUser(Authentication authentication) {
         String email = authentication.getName();
-        return email;
+        Optional<User> user = userRepository.findByEmail(email);
+        return new UserResponse(user.get().getId(), user.get().getEmail(), user.get().isEmailVerified());
+    }
+
+    public User updateUser(User user, UserRequest userRequest) {
+        if (userRequest.getFirstName() != null) {
+            user.setFirstName(userRequest.getFirstName());
+        }
+        if (userRequest.getLastName() != null) {
+            user.setLastName(userRequest.getLastName());
+        }
+        if (userRequest.getLocation() != null) {
+            user.setLocation(userRequest.getLocation());
+        }
+        if (userRequest.getAbout() != null) {
+            user.setAbout(userRequest.getAbout());
+        }
+
+        return userRepository.save(user);
     }
 }

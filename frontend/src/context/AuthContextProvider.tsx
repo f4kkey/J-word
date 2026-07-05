@@ -14,7 +14,8 @@ interface AuthContextType {
     user: User | null,
     login: (email: string, password: string) => Promise<void>;
     signup: (email: string, password: string) => Promise<void>;
-    logout: () => void;
+    logout: () => Promise<void>;
+    checkAuth: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -32,7 +33,8 @@ export default function AuthContextProvider() {
     const isOnAuthPage =
         location.pathname === "/login" ||
         location.pathname === "/signup" ||
-        location.pathname === "/password-reset";
+        location.pathname === "/password-reset" ||
+        location.pathname === "/verify-email";
 
     const login = async (email: string, password: string) => {
         try {
@@ -53,7 +55,7 @@ export default function AuthContextProvider() {
     const signup = async (email: string, password: string) => {
         try {
             const { data } = await axiosInstance.post(
-                "/auth/regiter",
+                "/auth/register",
                 {
                     email,
                     password,
@@ -103,12 +105,12 @@ export default function AuthContextProvider() {
         return <Navigate to="/" />
     }
 
-    if (user && !user.emailVerified) {
+    if (user && !user.emailVerified && location.pathname !== "/verify-email") {
         return < Navigate to="/verify-email" />
     }
 
     return (
-        <AuthContext.Provider value={{ user, login, signup, logout }}>
+        <AuthContext.Provider value={{ user, login, signup, logout, checkAuth }}>
             <Outlet />
         </AuthContext.Provider>
     )

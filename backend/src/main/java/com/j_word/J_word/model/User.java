@@ -38,4 +38,33 @@ public class User {
     private String password;
     private String passwordResetToken = null;
     private LocalDateTime passwordResetTokenExpiryDate = null;
+
+    private String firstName = null;
+    private String lastName = null;
+    private String location = null;
+    private String profilePicture = null;
+    private String coverPicture = null;
+    private Boolean profileComplete = false;
+    private String about = null;
+
+    void updateProfileCompletion() {
+        this.profileComplete = (this.firstName != null && !this.firstName.isEmpty()) &&
+                (this.lastName != null && !this.lastName.isEmpty()) &&
+                (this.location != null && !this.location.isEmpty());
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+        updateProfileCompletion();
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+        updateProfileCompletion();
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+        updateProfileCompletion();
+    }
 }

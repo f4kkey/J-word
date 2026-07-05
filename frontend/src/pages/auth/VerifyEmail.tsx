@@ -4,6 +4,7 @@ import Button from '../../components/auth/Button'
 import Seperator from '../../components/auth/Seperator'
 import { Link, useNavigate } from 'react-router-dom'
 import { axiosInstance } from '../../lib/axios'
+import { useAuth } from '../../context/AuthContextProvider'
 
 export default function VerifyEmail() {
 
@@ -11,14 +12,21 @@ export default function VerifyEmail() {
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
+    const { checkAuth } = useAuth();
 
-    const validateEmail = async (code: string) => {
+    const validateEmail = async (token: string) => {
         setMessage("")
         try {
             const res = await axiosInstance.post(
-                "/auth/email/validate"
+                "/auth/email/validate",
+                null,
+                {
+                    params: { token }
+                }
             )
             if (res.status === 200) {
+                await checkAuth();
+                // window.location.href = "/";
                 setErrorMessage("")
                 navigate("/")
             }

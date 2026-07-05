@@ -2,9 +2,14 @@ package com.j_word.J_word.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.j_word.J_word.dto.AuthRequest;
 import com.j_word.J_word.dto.AuthResponse;
+import com.j_word.J_word.dto.UserRequest;
+import com.j_word.J_word.dto.UserResponse;
+import com.j_word.J_word.model.User;
+import com.j_word.J_word.repository.UserRepository;
 import com.j_word.J_word.service.AuthService;
 
 import jakarta.mail.MessagingException;
@@ -12,10 +17,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -24,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final UserRepository userRepository;
 
     @PostMapping("/register")
     public AuthResponse register(@Valid @RequestBody AuthRequest authRequest)
@@ -37,7 +47,7 @@ public class AuthController {
     }
 
     @GetMapping("/getme")
-    public String getCurrentUser(Authentication authentication) {
+    public UserResponse getCurrentUser(Authentication authentication) {
         return authService.getCurrentUser(authentication);
     }
 
@@ -64,6 +74,19 @@ public class AuthController {
             @RequestParam String email) {
         authService.resetPassword(token, email, newPassword);
         return "Password reset successfully.";
+    }
+
+    @PutMapping("/profile/{id}")
+    public User updateUser(Authentication authentication,
+            @PathVariable Long id,
+            @RequestBody UserRequest userRequest) {
+        String email = authentication.getName();
+        Optional<User> user = userRepository.findByEmail(email);
+        if (!user.get().getId().equals(id)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "User does not have permission to update this profile.");
+        }
+        return authService.updateUser(user.get(), userRequest);
     }
 
 }
