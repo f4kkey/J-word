@@ -22,6 +22,9 @@ import com.j_word.J_word.repository.UserRepository;
 import com.j_word.J_word.security.JwtService;
 
 import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -34,6 +37,9 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final EmailService emailService;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public static String generate5DigitToken() {
         SecureRandom random = new SecureRandom();
@@ -179,8 +185,15 @@ public class AuthService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public void deleteUser(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        userRepository.delete(user);
+        User user = entityManager.find(User.class, email);
+        if (user != null) {
+            entityManager.createNativeQuery("DELETE FROM posts_likes WHERE user_id = :userId")
+                    .setParameter("userId", user.getId())
+                    .executeUpdate();
+            userRepository.delete(user);
+        }
+
     }
 }
