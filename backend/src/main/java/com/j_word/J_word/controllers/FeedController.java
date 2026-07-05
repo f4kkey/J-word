@@ -3,7 +3,9 @@ package com.j_word.J_word.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.j_word.J_word.dto.CommentRequest;
 import com.j_word.J_word.dto.PostRequest;
+import com.j_word.J_word.model.Comment;
 import com.j_word.J_word.model.Post;
 import com.j_word.J_word.service.FeedService;
 
@@ -68,6 +70,26 @@ public class FeedController {
     public ResponseEntity<List<Post>> getPostsByUser(@PathVariable Long userId) {
         List<Post> posts = feedService.getPostsByUser(userId);
         return ResponseEntity.ok(posts);
+    }
+
+    @PostMapping("/posts/{postId}/comments")
+    public ResponseEntity<Comment> addComment(@PathVariable Long postId, @RequestBody CommentRequest commentRequest,
+            Authentication authentication) {
+        Comment comment = feedService.addComment(postId, commentRequest, authentication.getName());
+        return ResponseEntity.ok(comment);
+    }
+
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<Post> deleteComment(@PathVariable Long commentId, Authentication authentication) {
+        feedService.deleteComment(commentId, authentication.getName());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/comments/{commentId}")
+    public ResponseEntity<Comment> editComment(@PathVariable Long commentId, @RequestBody CommentRequest commentRequest,
+            Authentication authentication) {
+        Comment comment = feedService.editComment(commentId, commentRequest, authentication.getName());
+        return ResponseEntity.ok(comment);
     }
 
 }

@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "posts")
 @Builder
 public class PostRequest {
     @NotEmpty
