@@ -162,10 +162,12 @@ public class AuthService {
         return new AuthResponse(token, "User login successfully");
     }
 
-    public UserResponse getCurrentUser(Authentication authentication) {
+    public User getCurrentUser(Authentication authentication) {
         String email = authentication.getName();
-        Optional<User> user = userRepository.findByEmail(email);
-        return new UserResponse(user.get().getId(), user.get().getEmail(), user.get().isEmailVerified());
+        User user = userRepository.findByEmail(email).orElseThrow(() ->
+            new IllegalArgumentException("User not found")
+        );
+        return user;
     }
 
     public User updateUser(User user, UserRequest userRequest) {

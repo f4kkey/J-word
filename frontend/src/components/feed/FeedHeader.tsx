@@ -82,7 +82,7 @@ export default function FeedHeader() {
                                 </li>
                                 <li>
                                     <NavLink
-                                        to={"/"}
+                                        to={"/notifications"}
                                         onClick={onClickMenuItem}
                                         className={({ isActive }) => (isActive ? "text-[#0a66c2]" : "")}
                                     >

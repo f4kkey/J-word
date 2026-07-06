@@ -27,23 +27,28 @@ public class LoadData {
             PostRepository postRepository) {
         return args -> {
             List<User> users = createUsers(userRepository);
-            createPosts(postRepository, users);
+            if (postRepository.count() == 0) {
+                createPosts(postRepository, users);
+            }
         };
     }
 
     private List<User> createUsers(UserRepository userRepository) {
-        List<User> users = List.of(
-                createUser("john.doe@example.com", "john", "John", "Doe",
+        return List.of(
+                findOrCreateUser(userRepository, "john.doe@example.com", "john", "John", "Doe",
                         "San Francisco, CA"),
-                createUser("anne.claire@example.com", "anne", "Anne", "Claire", "Paris, Fr"),
-                createUser("arnauld.manner@example.com", "arnauld", "Arnauld", "Manner",
+                findOrCreateUser(userRepository, "anne.claire@example.com", "anne", "Anne", "Claire", "Paris, Fr"),
+                findOrCreateUser(userRepository, "arnauld.manner@example.com", "arnauld", "Arnauld", "Manner",
                         "Dakar, SN"),
-                createUser("moussa.diop@example.com", "moussa", "Moussa", "Diop",
+                findOrCreateUser(userRepository, "moussa.diop@example.com", "moussa", "Moussa", "Diop",
                         "Bordeaux, FR"),
-                createUser("awa.diop@example.com", "awa", "Awa", "Diop", "New Delhi, IN"));
+                findOrCreateUser(userRepository, "awa.diop@example.com", "awa", "Awa", "Diop", "New Delhi, IN"));
+    }
 
-        userRepository.saveAll(users);
-        return users;
+    private User findOrCreateUser(UserRepository userRepository, String email, String password, String firstName,
+            String lastName, String location) {
+        return userRepository.findByEmail(email)
+                .orElseGet(() -> userRepository.save(createUser(email, password, firstName, lastName, location)));
     }
 
     private User createUser(String email, String password, String firstName, String lastName,
