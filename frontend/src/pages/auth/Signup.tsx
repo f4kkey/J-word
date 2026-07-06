@@ -1,5 +1,5 @@
 import React, { useState, type SubmitEvent } from 'react'
-import Input from '../../components/auth/Input'
+import Input from '../../components/Input'
 import Button from '../../components/auth/Button'
 import Seperator from '../../components/auth/Seperator'
 import { Link, useNavigate } from 'react-router-dom'

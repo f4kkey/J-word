@@ -8,6 +8,11 @@ interface User {
     id: string,
     email: string,
     emailVerified: boolean,
+    profilePicture?: string,
+    firstName: string,
+    lastName: string,
+    location: string,
+    profileCompletion: boolean
 }
 
 interface AuthContextType {

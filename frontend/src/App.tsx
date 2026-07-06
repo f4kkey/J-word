@@ -7,6 +7,7 @@ import ResetPassword from './pages/auth/ResetPassword'
 import VerifyEmail from './pages/auth/VerifyEmail'
 import AuthLayout from './components/auth/AuthLayout'
 import AuthContextProvider from './context/AuthContextProvider'
+import FeedLayout from './components/feed/FeedLayout'
 
 const router = createBrowserRouter([
     {
@@ -14,7 +15,12 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/',
-                element: <Feed />,
+                element: <FeedLayout />,
+                children: [
+                    {
+                        element: <Feed />
+                    }
+                ]
             },
             {
                 path: '/',
