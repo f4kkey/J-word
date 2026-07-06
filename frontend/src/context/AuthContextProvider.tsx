@@ -4,7 +4,7 @@ import { axiosInstance } from '../lib/axios';
 import Loader from '../components/Loader';
 
 
-interface User {
+export interface User {
     id: string,
     email: string,
     emailVerified: boolean,
