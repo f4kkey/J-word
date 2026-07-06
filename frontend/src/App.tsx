@@ -18,6 +18,7 @@ const router = createBrowserRouter([
                 element: <FeedLayout />,
                 children: [
                     {
+                        index: true,
                         element: <Feed />
                     }
                 ]

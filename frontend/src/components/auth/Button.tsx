@@ -2,7 +2,7 @@ import React, { type ButtonHTMLAttributes } from 'react'
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
     outline?: boolean;
-    buttonSize: "small" | "medium" | "large";
+    buttonSize?: "small" | "medium" | "large";
 };
 
 const sizeClasses = {
