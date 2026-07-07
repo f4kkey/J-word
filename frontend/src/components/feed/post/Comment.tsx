@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { useAuth, type IUser } from '../../context/AuthContextProvider';
+import { useAuth, type IUser } from '../../../context/AuthContextProvider';
 import { useNavigate } from 'react-router-dom';
-import Input from '../Input';
-import { timeAgo } from '../../utils/data';
+import Input from '../../Input';
+import { timeAgo } from '../../../utils/data';
 import { EllipsisVerticalIcon } from 'lucide-react';
+import TimeAgo from './TimeAgo';
 export interface IComment {
     id: number;
     content: string;
@@ -47,8 +48,7 @@ export default function Comment({ comment, deleteComment, editComment }: ICommen
                                 <div className={"text-black/60"}>
                                     {comment.author.location}
                                 </div>
-                                {timeAgo(new Date(comment.updatedAt || comment.createdAt))}
-                                {comment.updatedAt ? ". Edited" : ""}
+                                <TimeAgo date={comment.createdAt} edited={!!comment.updatedAt} />
                             </div>
                         </button>
                         {comment.author.id == user?.id && (

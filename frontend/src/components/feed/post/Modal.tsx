@@ -1,6 +1,6 @@
 import React, { useState, type Dispatch, type SetStateAction } from 'react'
-import Button from '../auth/Button';
-import Input from '../Input';
+import Button from '../../auth/Button';
+import Input from '../../Input';
 
 interface IPostingModalProps {
     showModal: boolean;

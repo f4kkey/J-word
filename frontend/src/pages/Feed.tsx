@@ -4,10 +4,10 @@ import RightSideBar from '../components/feed/RightSideBar';
 import LeftSideBar from '../components/feed/LeftSideBar';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/auth/Button';
-import type { IPost } from '../components/feed/Post';
+import type { IPost } from '../components/feed/post/Post';
 import { axiosInstance } from '../lib/axios';
-import Post from '../components/feed/Post';
-import Modal from '../components/feed/Modal';
+import Post from '../components/feed/post/Post';
+import Modal from '../components/feed/post/Modal';
 
 export default function Feed() {
     const { user } = useAuth();

@@ -1,12 +1,13 @@
 import React, { useEffect, useState, type Dispatch, type SetStateAction, type SubmitEvent } from 'react'
-import { useAuth, type IUser } from '../../context/AuthContextProvider';
+import { useAuth, type IUser } from '../../../context/AuthContextProvider';
 import { data, useNavigate } from 'react-router-dom';
 import { EllipsisVerticalIcon, MessageCircle, MessageCircleIcon, ThumbsUpIcon } from 'lucide-react';
-import { axiosInstance } from '../../lib/axios';
-import Input from '../Input';
-import { timeAgo } from '../../utils/data';
+import { axiosInstance } from '../../../lib/axios';
+import Input from '../../Input';
+import { timeAgo } from '../../../utils/data';
 import Comment, { type IComment } from './Comment';
 import Modal from './Modal';
+import TimeAgo from './TimeAgo';
 
 export interface IPost {
     id: number;
@@ -234,8 +235,7 @@ export default function Post({ post, setPosts }: IPostProps) {
                                 {post.author.location}
                             </div>
                             <div>
-                                {timeAgo(new Date(post.updatedAt || post.createdAt))}
-                                {post.updatedAt ? " . Edited" : ""}
+                                <TimeAgo date={post.createdAt} edited={!!post.updatedAt} />
                             </div>
                         </div>
                     </div>
