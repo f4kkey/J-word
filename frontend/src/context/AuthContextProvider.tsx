@@ -4,7 +4,7 @@ import { axiosInstance } from '../lib/axios';
 import Loader from '../components/Loader';
 
 
-export interface User {
+export interface IUser {
     id: string,
     email: string,
     emailVerified: boolean,
@@ -16,7 +16,7 @@ export interface User {
 }
 
 interface AuthContextType {
-    user: User | null,
+    user: IUser | null,
     login: (email: string, password: string) => Promise<void>;
     signup: (email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
@@ -30,7 +30,7 @@ export function useAuth() {
 }
 
 export default function AuthContextProvider() {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<IUser | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     const location = useLocation();
