@@ -99,7 +99,6 @@ export default function Post({ post, setPosts }: IPostProps) {
             )
             if (res.status >= 200 && res.status < 300) {
                 setComments((prev) => prev.filter((c) => c.id !== commentId));
-
             }
             const message = await res.data.message
             throw new Error(message);

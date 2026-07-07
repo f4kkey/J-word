@@ -7,6 +7,7 @@ import Button from '../components/auth/Button';
 import type { IPost } from '../components/feed/Post';
 import { axiosInstance } from '../lib/axios';
 import Post from '../components/feed/Post';
+import Modal from '../components/feed/Modal';
 
 export default function Feed() {
     const { user } = useAuth();
@@ -41,6 +42,23 @@ export default function Feed() {
         fetchPosts()
     }, [feedContent]);
 
+    const handlePost = async (data: FormData) => {
+        try {
+            const res = await axiosInstance.post(
+                "/feed/posts",
+                data
+            );
+
+            setPosts([res.data, ...posts]);
+        } catch (error) {
+            if (error instanceof Error) {
+                setErrorMessage(error.message)
+            } else {
+                setErrorMessage("An unknown error occurred")
+            }
+        }
+    };
+
     return (
         <div className='grid h-full gap-8 min-[1135px]:grid-cols-[14rem_1fr_20rem] min-[1135px]:items-start'>
             <div className='hidden min-[1135px]:block'>
@@ -64,13 +82,13 @@ export default function Feed() {
                         Create a post
                     </Button>
 
-                    {/* <Modal
+                    <Modal
                         onSubmit={handlePost}
                         showModal={showPostingModal}
                         setShowModal={setShowPostingModal}
                     >
 
-                    </Modal> */}
+                    </Modal>
 
                 </div>
 
