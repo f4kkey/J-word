@@ -40,7 +40,7 @@ export default function ResetPassword() {
             )
             if (res.status === 200) {
                 setErrorMessage("")
-                navigate("/login")
+                navigate("/auth/login")
             }
             setErrorMessage(res.data)
         } catch (error) {
@@ -72,7 +72,7 @@ export default function ResetPassword() {
                         <Button type='submit'> Next</Button>
                         <Button type='button' outline
                             onClick={() => {
-                                navigate("/login")
+                                navigate("/auth/login")
                             }}>
                             Back
                         </Button>

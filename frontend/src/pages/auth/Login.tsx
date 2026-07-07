@@ -53,11 +53,11 @@ export default function Login() {
                 <Button type='submit' disabled={isLoading}>
                     {isLoading ? "..." : "Sign in"}
                 </Button>
-                <Link to="/password-reset">Forgot Password?</Link>
+                <Link to="/auth/password-reset">Forgot Password?</Link>
             </form>
             <Seperator>Or</Seperator>
             <div className='text-center'>You new here?{" "}
-                <Link to="/signup" >
+                <Link to="/auth/signup" >
                     Make an account
                 </Link>
             </div>

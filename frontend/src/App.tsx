@@ -8,6 +8,8 @@ import VerifyEmail from './pages/auth/VerifyEmail'
 import AuthLayout from './components/auth/AuthLayout'
 import AuthContextProvider from './context/AuthContextProvider'
 import FeedLayout from './components/feed/FeedLayout'
+import Profile from './pages/Profile'
+import UpdateProfile from './pages/auth/UpdateProfile'
 
 const router = createBrowserRouter([
     {
@@ -24,7 +26,7 @@ const router = createBrowserRouter([
                 ]
             },
             {
-                path: '/',
+                path: '/auth',
                 element: <AuthLayout />,
                 children: [
                     {
@@ -42,6 +44,10 @@ const router = createBrowserRouter([
                     {
                         path: 'verify-email',
                         element: <VerifyEmail />,
+                    },
+                    {
+                        path: 'update-profile/:id',
+                        element: <UpdateProfile />,
                     },
                 ]
             }

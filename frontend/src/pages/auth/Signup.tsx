@@ -48,7 +48,7 @@ export default function Signup() {
             </form>
             <Seperator>Or</Seperator>
             <div className='text-center'>Already on J-word?{" "}
-                <Link to="/login" >
+                <Link to="/auth/login" >
                     Sign in
                 </Link>
             </div>

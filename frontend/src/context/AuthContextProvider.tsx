@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState, type Dispatch, type SetStateAction } from 'react'
 import { data, Navigate, Outlet, useLocation } from 'react-router-dom'
 import { axiosInstance } from '../lib/axios';
 import Loader from '../components/Loader';
@@ -11,12 +11,15 @@ export interface IUser {
     profilePicture?: string,
     firstName: string,
     lastName: string,
+    company: string,
+    position: string,
     location: string,
     profileCompletion: boolean
 }
 
 interface AuthContextType {
-    user: IUser | null,
+    user: IUser | null;
+    setUser: Dispatch<SetStateAction<IUser | null>>;
     login: (email: string, password: string) => Promise<void>;
     signup: (email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
@@ -36,10 +39,10 @@ export default function AuthContextProvider() {
     const location = useLocation();
 
     const isOnAuthPage =
-        location.pathname === "/login" ||
-        location.pathname === "/signup" ||
-        location.pathname === "/password-reset" ||
-        location.pathname === "/verify-email";
+        location.pathname === "/auth/login" ||
+        location.pathname === "/auth/signup" ||
+        location.pathname === "/auth/password-reset" ||
+        location.pathname === "/auth/verify-email";
 
     const login = async (email: string, password: string) => {
         try {
@@ -103,19 +106,19 @@ export default function AuthContextProvider() {
     }
 
     if (!isLoading && !user && !isOnAuthPage) {
-        return <Navigate to="/login" />
+        return <Navigate to="/auth/login" />
     }
 
     if (user && user?.emailVerified && isOnAuthPage) {
         return <Navigate to="/" />
     }
 
-    if (user && !user.emailVerified && location.pathname !== "/verify-email") {
-        return < Navigate to="/verify-email" />
+    if (user && !user.emailVerified && location.pathname !== "/auth/verify-email") {
+        return < Navigate to="/auth/verify-email" />
     }
 
     return (
-        <AuthContext.Provider value={{ user, login, signup, logout, checkAuth }}>
+        <AuthContext.Provider value={{ user, login, signup, logout, checkAuth, setUser }}>
             <Outlet />
         </AuthContext.Provider>
     )

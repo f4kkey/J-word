@@ -44,6 +44,8 @@ public class User {
 
     private String firstName = null;
     private String lastName = null;
+    private String company = null;
+    private String position = null;
     private String location = null;
     private String profilePicture = null;
     private String coverPicture = null;
