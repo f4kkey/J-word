@@ -1,6 +1,7 @@
 package com.j_word.J_word.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -118,5 +119,17 @@ public class FeedService {
         }
         comment.setContent(commentRequest.getContent());
         return commentRepository.save(comment);
+    }
+
+    public List<Comment> getPostComment(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        return post.getComments();
+    }
+
+    public Set<User> getPostLike(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        return post.getLikes();
     }
 }

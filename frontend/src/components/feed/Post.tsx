@@ -1,6 +1,6 @@
 import React, { useEffect, useState, type Dispatch, type SetStateAction, type SubmitEvent } from 'react'
 import { useAuth, type IUser } from '../../context/AuthContextProvider';
-import { useNavigate } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
 import { EllipsisVerticalIcon, MessageCircle, MessageCircleIcon, ThumbsUpIcon } from 'lucide-react';
 import { axiosInstance } from '../../lib/axios';
 import Input from '../Input';
@@ -13,8 +13,6 @@ export interface IPost {
     content: string;
     author: IUser;
     picture?: string;
-    likes?: IUser[];
-    comments?: IComment[];
     createdAt: string;
     updatedAt?: string;
 }
@@ -31,10 +29,9 @@ export default function Post({ post, setPosts }: IPostProps) {
     const [editing, setEditing] = useState(false);
     const [showComments, setShowComments] = useState(false);
     const [commentContent, setCommentContent] = useState("");
+    const [likes, setLikes] = useState<IUser[]>([])
     const [comments, setComments] = useState<IComment[]>([]);
-    const [postLiked, setPostLiked] = useState<boolean>(
-        !!post.likes?.some((like) => like.id === user?.id)
-    );
+    const [postLiked, setPostLiked] = useState<boolean | undefined>();
 
     const editPost = async (data: FormData) => {
         try {
@@ -109,6 +106,7 @@ export default function Post({ post, setPosts }: IPostProps) {
 
             )
             if (res.status >= 200 && res.status < 300) {
+                setComments((prev) => [res.data, ...prev])
                 setCommentContent("")
                 return
             }
@@ -162,8 +160,44 @@ export default function Post({ post, setPosts }: IPostProps) {
     };
 
     useEffect(() => {
-        setPostLiked(!!post.likes?.some((like) => like.id === user?.id))
-    }, [post.likes, user?.id])
+        const fetchComments = async () => {
+            try {
+                const res = await axiosInstance.get(
+                    `/feed/posts/${post.id}/comments`,
+                )
+                if (res.status >= 200 && res.status < 300) {
+                    setComments(res.data)
+                    return
+                }
+                const message = await res.data.message
+                throw new Error(message);
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchComments();
+    }, [post.id]);
+
+    useEffect(() => {
+
+        const fetchLikes = async () => {
+            try {
+                const res = await axiosInstance.get(
+                    `/feed/posts/${post.id}/likes`,
+                )
+                if (res.status >= 200 && res.status < 300) {
+                    setLikes(res.data)
+                    setPostLiked(res.data.some((like) => like.id === user?.id))
+                    return
+                }
+                const message = await res.data.message
+                throw new Error(message);
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchLikes();
+    }, [post.id, user?.id]);
 
     return (
         <>{editing ? <Modal
@@ -233,12 +267,12 @@ export default function Post({ post, setPosts }: IPostProps) {
                     />
                 )}
                 <div className={"flex items-center justify-between"}>
-                    {post.likes && post.likes.length > 0 ? (
+                    {likes && likes.length > 0 ? (
                         <div className={"px-4 py-1 text-xs"}>
-                            <span>{postLiked ? "You " : post.likes[0].firstName + " " + post.likes[0].lastName + " "}</span>
-                            {post.likes.length - 1 > 0 ? (
+                            <span>{postLiked ? "You " : likes[0].firstName + " " + likes[0].lastName + " "}</span>
+                            {likes.length - 1 > 0 ? (
                                 <span>
-                                    and {post.likes.length - 1} {post.likes.length - 1 === 1 ? "other" : "others"}
+                                    and {likes.length - 1} {likes.length - 1 === 1 ? "other" : "others"}
                                 </span>
                             ) : null}{" "}
                             liked this
@@ -247,9 +281,9 @@ export default function Post({ post, setPosts }: IPostProps) {
                         <div></div>
                     )}
 
-                    {post.comments && post.comments.length > 0 ? (
+                    {comments && comments.length > 0 ? (
                         <button className={"px-4 py-1 text-xs"} onClick={() => setShowComments((prev) => !prev)}>
-                            <span>{post.comments.length} comments</span>
+                            <span>{comments.length} comments</span>
                         </button>
                     ) : (
                         <div></div>
@@ -288,7 +322,7 @@ export default function Post({ post, setPosts }: IPostProps) {
                             />
                         </form>
 
-                        {post?.comments?.map((comment) => (
+                        {comments.map((comment) => (
                             <Comment
                                 editComment={editComment}
                                 deleteComment={deleteComment}

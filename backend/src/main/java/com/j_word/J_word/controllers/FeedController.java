@@ -7,11 +7,13 @@ import com.j_word.J_word.dto.CommentRequest;
 import com.j_word.J_word.dto.PostRequest;
 import com.j_word.J_word.model.Comment;
 import com.j_word.J_word.model.Post;
+import com.j_word.J_word.model.User;
 import com.j_word.J_word.service.FeedService;
 
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -72,6 +74,12 @@ public class FeedController {
         return ResponseEntity.ok(posts);
     }
 
+    @GetMapping("/posts/{postId}/comments")
+    public ResponseEntity<List<Comment>> getPostComment(@PathVariable Long postId) {
+        List<Comment> comments = feedService.getPostComment(postId);
+        return ResponseEntity.ok(comments);
+    }
+
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<Comment> addComment(@PathVariable Long postId, @RequestBody CommentRequest commentRequest,
             Authentication authentication) {
@@ -90,6 +98,12 @@ public class FeedController {
             Authentication authentication) {
         Comment comment = feedService.editComment(commentId, commentRequest, authentication.getName());
         return ResponseEntity.ok(comment);
+    }
+
+    @GetMapping("/posts/{postId}/likes")
+    public ResponseEntity<Set<User>> getPostLike(@PathVariable Long postId) {
+        Set<User> users = feedService.getPostLike(postId);
+        return ResponseEntity.ok(users);
     }
 
 }
